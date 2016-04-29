@@ -1,3 +1,8 @@
+/*
+	静态文本服务器
+
+	1. 创建http服务器
+*/
 var http = require( 'http' ),
 	fs   = require( 'fs' ),
 	url  = require( 'url' ),
@@ -33,4 +38,4 @@ http.createServer( function( request, response ){
 		}
 	} );
 
-}).listen(8989);
+}).listen(8080);
