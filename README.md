@@ -1,2 +1,2 @@
-# note-nodejs
-学习笔记之nodejs（nodejs of notebook）
+## 学习资料
+下载地址：https://git-for-windows.github.io/ （针对windows系统）
