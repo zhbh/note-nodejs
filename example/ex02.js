@@ -1,5 +1,9 @@
 /*
 	静态文本服务器
+
+	1. 启用压缩
+
+	2. 启用缓存
 */
 var http = require( 'http' ),
 	fs   = require( 'fs' ),
@@ -26,34 +30,54 @@ http.createServer( function( request, response ) {
 			response.end( '当前路径：' + pathName + '在服务器找不到' );
 
 		}else {
-			var requestMimeType = path.extname( realPath );
-			requestMimeType = requestMimeType ? requestMimeType.slice( 1 ) : 'unknown';
+			var requestType = path.extname( realPath );
+			requestType = requestType ? requestType.slice( 1 ) : 'unknown';
 
-			var contentType = ( mimeTypes[ requestMimeType ] ? mimeTypes[ requestMimeType ] : 'text/plain' ) + ';charset=UTF-8',
+			var contentType = ( mimeTypes[ requestType ] ? mimeTypes[ requestType ] : 'text/plain' ) + ';charset=UTF-8',
 				acceptEncoding = request.headers[ 'accept-encoding' ] || '';
 
 			var localFile = fs.createReadStream( realPath ),
 				matchToggle = pathName.match( config.compress.match );
 
-			response.setHeader( 'Content-Type', contentType );
+			//读取文件修改日期，响应头设置最新修改
+			fs.stat( realPath, function ( err, stat ) {
+			    var lastModified = stat.mtime.toUTCString( );
+			    response.setHeader( 'Last-Modified', lastModified );
+			    response.setHeader( 'Content-Type', contentType );
 
-			if ( matchToggle && acceptEncoding.match( /\bgzip\b/ ) ) {
-				response.writeHead( 200, {
-					'Content-Encoding' : 'gzip'
-				} );
+			    //启用缓存
+			    if ( request.headers[ 'if-modified-since' ] && lastModified === request.headers[ 'if-modified-since' ] ) {
+				    response.writeHead( 304, 'Not Modified' );
+				    response.end();
 
-				localFile.pipe( zlib.createGzip( ) ).pipe( response );
-			}else if( matchToggle && acceptEncoding.match( /\bdeflate\b/ ) ) {
-				response.writeHead( 200, {
-					'Content-Encoding' : 'deflate'
-				} );
+				    return;
+				}
 
-				localFile.pipe( zlib.createDeflate( ) ).pipe( response );
-			}else {
-				localFile.pipe( response );
-			}
+				if( requestType.match( config.expires.match ) ) {
+					var expires = new Date( );
+					expires.setTime( expires.getTime() + config.expires.maxAge * 1000 );
+					response.setHeader( 'Expires', expires.toUTCString() );
+					response.setHeader( 'Cache-Control', 'max-age=' + config.expires.maxAge );
+				}
 
+			    //启用压缩
+				if ( matchToggle && acceptEncoding.match( /\bgzip\b/ ) ) {
+					response.writeHead( 200, {
+						'Content-Encoding' : 'gzip'
+					} );
+
+					localFile.pipe( zlib.createGzip( ) ).pipe( response );
+				}else if( matchToggle && acceptEncoding.match( /\bdeflate\b/ ) ) {
+					response.writeHead( 200, {
+						'Content-Encoding' : 'deflate'
+					} );
+
+					localFile.pipe( zlib.createDeflate( ) ).pipe( response );
+				}else {
+					localFile.pipe( response );
+				}
+			} );
 		}
 	} );
 
-}).listen( 8080 );
+} ).listen( 8080 );
