@@ -1,9 +1,7 @@
 /*
 	静态文本服务器
 
-	1. 启用压缩
-
-	2. 启用缓存
+	实例 ex02.js
 */
 var http = require( 'http' ),
 	fs   = require( 'fs' ),
