@@ -69,6 +69,7 @@
 根据路径对象，获取文件扩展名，然后判断其扩展名获取相应的文件MIME类型，自定义mime.js：
 
 > MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型，是描述消息内容类型的因特网标准。
+
 > [MIME类型列表](http://www.w3school.com.cn/media/media_mimeref.asp)
 
 如下代码，列出基本常用的MIME类型，其JSON对象（key-value，key是文件扩展名，value是MIME类型）：
