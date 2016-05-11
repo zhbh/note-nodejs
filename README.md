@@ -68,8 +68,8 @@
 
 根据路径对象，获取文件扩展名，然后判断其扩展名获取相应的文件MIME类型，自定义mime.js：
 
-	> MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型，是描述消息内容类型的因特网标准。
-	> [MIME类型列表](http://www.w3school.com.cn/media/media_mimeref.asp)
+> MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型，是描述消息内容类型的因特网标准。
+> [MIME类型列表](http://www.w3school.com.cn/media/media_mimeref.asp)
 
 如下代码，列出基本常用的MIME类型，其JSON对象（key-value，key是文件扩展名，value是MIME类型）：
 
@@ -96,9 +96,9 @@
 	};
 ```
 
-	> 一般将代码合理拆分到不同的JS文件中，每一个文件就是一个模块，而文件路径就是模块名。在编写每个模块时，都有require、exports、module三个预先定义好的变量可供使用。
+> 一般将代码合理拆分到不同的JS文件中，每一个文件就是一个模块，而文件路径就是模块名。在编写每个模块时，都有require、exports、module三个预先定义好的变量可供使用。
 
-	> 其中，`exports`对象是当前模块的导出对象，用于导出模块公有方法和属性。
+> 其中，`exports`对象是当前模块的导出对象，用于导出模块公有方法和属性。
 
 6.请求文件存在，则从服务器本地读取相应的文件，并返回相应的内容类型和数据，状态码200。
 
